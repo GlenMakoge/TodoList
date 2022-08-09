@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<input>
+    <input id="todo-title" type="text" />
+    <input id="date-picker" type="date" />
+    <button onclick="addTodo()">Add Todo</button> 
+
+    <div id="todo-list"></div>
+     <!-- usind a div to render our list. automatic wiping. -->
+    <!-- adding a button to automatically add new items -->
+
+    <!-- <div>Get Roceries</div>
+    <div>Wash Car</div>
+    <div>Make dinner</div> -->
+    <!-- <label for="">Enter Your Name</label><br>
+    <input type="text" id="myText"><br>
+    <button type="button" id="myButton">submit</button> -->
+
+    <script>
+        // let todo1 = 'Get groceries';
+        // let todo2 = 'Wash car';
+        // let todo3 = 'Make dinner';
+
+        //creating an object
+
+        // Model
+        //if local storage has a todo array, then use it
+        // otherwise use default array
+        let todos;
+
+        //retrieve loccalStorage
+        const savedTodos = JSON.parse(localStorage.getItem('todos'));
+        //Check if it's an array
+        if(Array.isArray(savedTodos)){
+            todos = savedTodos;
+        }else {
+             todos = [{
+                title: 'Get groceries',
+                dueDate: '2021-02-01',
+                id: 'id1'
+            }, {
+                title: 'Wash car',
+                dueDate: '2021-09-11',
+                id: 'id2'
+            }, {
+                title: 'Make dinner',
+                dueDate: '2021-08-19',
+                id: 'id3'
+            }];
+        }
+
+        //creates a todo
+
+        function createTodo(title, dueDate){
+            
+            const id = '' + new Date().getTime();
+            todos.push({
+                title: title,
+                dueDate: dueDate,
+                id: id
+            });
+
+        }
+        //Deletes a todo
+        function removeTodo(idToDelete){
+                 todos = todos.filter(function (todo) {
+                //if id of this todo matches idToDelete, return false
+                //for eveything else, return true
+                if (todo.id === idToDelete) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            saveTodos();
+        }
+
+        function saveTodos(){
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+            render();
+
+            //controller
+           function addTodo() {
+                 const textbox = document.getElementById('todo-title');
+                const title = textbox.value;
+                //grabing date
+                const datePicker = document.getElementById('date-picker');
+                const dueDate = datePicker.value;
+
+                createTodo(title, dueDate);
+
+                render(); //gives the updated list
+            }
+
+            function deleteTodo(event){
+                const deleteButton = event.target;
+                const idToDelete = deleteButton.id;
+                removeTodo(idToDelete);
+                render();
+            }
+            // view
+            function render(){
+                 // reseting our list
+                    document.getElementById('todo-list').innerHTML = '';
+                   todos.forEach(function (todo) {
+                    const element = document.createElement('div') //creating an HTML element
+                    element.innerText = todo.title + '' + todo.dueDate; //setting value of todo1 which is groceries
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerText = 'Delete';
+                    deleteButton.style = 'margin-left: 12px;';
+                    deleteButton.onclick = deleteTodo; // deleting
+                    deleteButton.id = todo.id;
+                    element.appendChild(deleteButton);
+
+                    const todoList = document.getElementById('todo-list')
+                    todoList.appendChild(element); // adding div to our page
+
+                });
+
+            }
+
+       // let element = document.createElement('div') creating an HTML element
+       // element.innerText = todo1; setting value of todo1 which is groceries
+       // document.body.appendChild(element); adding div to our page
+
+        // let element = document.createElement('div') creating an HTML element
+        // element.innerText = todo2; setting value of todo2 which is wash car
+        // document.body.appendChild(element);  adding div to our page
+
+        // let element = document.createElement('div') creating an HTML element
+        //   element.innerText = todo3; setting value of todo3 which is make dinner
+        //   document.body.appendChild(element);  adding div to our page
+
+          //Based on repetition of same code, we use functions
+
+        //   function addTodo(todoTitle){
+        //     let element = document.createElement('div') //creating an HTML element
+        //     element.innerText = todoTitle; //setting value of todo1 which is groceries
+        //     document.body.appendChild(element); // adding div to our page
+
+        //   }
+
+        //   addTodo(todo1);
+        //   addTodo(todo2);
+        //   addTodo(todo3);
+
+    </script>
+</body>
+</html>
